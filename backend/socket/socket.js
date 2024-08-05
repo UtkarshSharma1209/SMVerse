@@ -8,7 +8,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
     cors:{
-        origin: `https://smverse.onrender.com`,
+        origin: `http://localhost:5173'`,
         methods:['GET','POST']
     }
 })
@@ -16,7 +16,7 @@ const io = new Server(server, {
 const userSocketMap = {} ; // this map stores socket id corresponding the user id; userId -> socketId
 
 export const getReceiverSocketId = (receiverId) => userSocketMap[receiverId];
-const socket = io.connect('https://smverse.onrender.com');
+
 io.on('connection', (socket)=>{
     const userId = socket.handshake.query.userId;
     if(userId){
