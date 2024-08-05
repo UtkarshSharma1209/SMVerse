@@ -16,7 +16,7 @@ const io = new Server(server, {
 const userSocketMap = {} ; // this map stores socket id corresponding the user id; userId -> socketId
 
 export const getReceiverSocketId = (receiverId) => userSocketMap[receiverId];
-//const socket = io('https://smverse.onrender.com');
+const socket = io.connect('https://smverse.onrender.com');
 io.on('connection', (socket)=>{
     const userId = socket.handshake.query.userId;
     if(userId){
@@ -32,9 +32,6 @@ io.on('connection', (socket)=>{
         io.emit('getOnlineUsers', Object.keys(userSocketMap));
     });
 })
-const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+
 
 export {app, server, io};
