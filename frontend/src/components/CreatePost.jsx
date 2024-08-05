@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader } from "./ui/dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Textarea } from "./ui/textarea";
@@ -9,6 +9,9 @@ import { toast } from "sonner";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setPosts } from "@/redux/postSlice";
+import io from "socket.io-client";
+
+const socket = io("https://smverse.onrender.com"); // Replace with your server URL
 
 const CreatePost = ({ open, setOpen }) => {
   const imageRef = useRef();
@@ -19,6 +22,17 @@ const CreatePost = ({ open, setOpen }) => {
   const { user } = useSelector((store) => store.auth);
   const { posts } = useSelector((store) => store.post);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    // Listen for new posts
+    socket.on("newPost", (post) => {
+      dispatch(setPosts([post, ...posts]));
+    });
+
+    return () => {
+      socket.off("newPost");
+    };
+  }, [dispatch, posts]);
 
   const fileChangeHandler = async (e) => {
     const file = e.target.files?.[0];
@@ -46,9 +60,10 @@ const CreatePost = ({ open, setOpen }) => {
         }
       );
       if (res.data.success) {
-        dispatch(setPosts([res.data.post, ...posts])); // [1] -> [1,2] -> total element = 2
         toast.success(res.data.message);
         setOpen(false);
+        // Emit a 'newPost' event with the created post
+        socket.emit("newPost", res.data.post);
       }
     } catch (error) {
       toast.error(error.response.data.message);
