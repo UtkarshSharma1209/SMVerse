@@ -16,7 +16,7 @@ const io = new Server(server, {
 const userSocketMap = {} ; // this map stores socket id corresponding the user id; userId -> socketId
 
 export const getReceiverSocketId = (receiverId) => userSocketMap[receiverId];
-
+const socket = io('https://smverse.onrender.com');
 io.on('connection', (socket)=>{
     const userId = socket.handshake.query.userId;
     if(userId){
