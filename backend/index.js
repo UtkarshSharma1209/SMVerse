@@ -46,7 +46,7 @@ server.listen(PORT, () => {
 //Code to keep server alive
 
 const url = process.env.URL; // Replace with your Render URL
-const interval = 30000; // Interval in milliseconds (30 seconds)
+const interval = 300000; // Interval in milliseconds (30 seconds)
 
 function reloadWebsite() {
   axios.get(url)
