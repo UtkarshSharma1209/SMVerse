@@ -20,6 +20,13 @@ export const register = async (req, res) => {
                 success: false,
             });
         };
+        const usern = await User.findOne({ username });
+        if (usern) {
+            return res.status(401).json({
+                message: "Try different username",
+                success: false,
+            });
+        };
         const hashedPassword = await bcrypt.hash(password, 10);
         await User.create({
             username,
