@@ -140,6 +140,7 @@ export const editProfile = async (req, res) => {
             });
         };
         if (bio) user.bio = bio;
+        if(!bio) user.bio="";
         if (gender) user.gender = gender;
         if (profilePicture) user.profilePicture = cloudResponse.secure_url;
 
